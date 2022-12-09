@@ -3,6 +3,7 @@ package de.davidkoehlmann.ecommerceapplicationbackend.account;
 import de.davidkoehlmann.ecommerceapplicationbackend.cart.Cart;
 import de.davidkoehlmann.ecommerceapplicationbackend.cart.CartDTO;
 import de.davidkoehlmann.ecommerceapplicationbackend.cart.CartRepository;
+import de.davidkoehlmann.ecommerceapplicationbackend.cart.CartServiceImpl;
 import de.davidkoehlmann.ecommerceapplicationbackend.cartproduct.CartProductDTO;
 import de.davidkoehlmann.ecommerceapplicationbackend.product.Product;
 import de.davidkoehlmann.ecommerceapplicationbackend.product.ProductDTO;
@@ -69,25 +70,7 @@ public class AccountServiceImpl implements AccountService{
 
             // Cart
             Cart curCart = curAccount.getCart();
-            CartDTO cartDTO = new CartDTO();
-            BeanUtils.copyProperties(curCart, cartDTO);
-
-            // Products
-            ArrayList<CartProductDTO> cartProductDTOs = new ArrayList<>();
-            curCart.getCartProducts().forEach(curCartProduct -> {
-                CartProductDTO cartProductDTO = new CartProductDTO();
-                cartProductDTO.setAmount(curCartProduct.getAmount());
-
-                // Product
-                ProductDTO productDTO = new ProductDTO();
-                Product product = curCartProduct.getProduct();
-                BeanUtils.copyProperties(product, productDTO);
-
-                cartProductDTO.setProduct(productDTO);
-                cartProductDTOs.add(cartProductDTO);
-            });
-
-            cartDTO.setProducts(cartProductDTOs);
+            CartDTO cartDTO = CartServiceImpl.convertCartToCartDTO(curCart);
             accountDTO.setCart(cartDTO);
             accountDTOs.add(accountDTO);
         });
