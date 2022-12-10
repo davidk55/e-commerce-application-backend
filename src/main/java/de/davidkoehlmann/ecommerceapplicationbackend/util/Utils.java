@@ -18,6 +18,11 @@ public class Utils {
         return days * DAYS_IN_HOURS * HOURS_IN_MIN * MIN_IN_SEC;
     }
 
+    public static Date getCurrentDatePlusMinutes(Integer minutes) {
+        long currentTimeInMs = Timestamp.valueOf(LocalDateTime.now()).getTime();
+        return new Date(currentTimeInMs + minutes * MIN_IN_SEC * SEC_IN_MILISEC);
+    }
+
     public static Date getCurrentDatePlusDays(Integer days) {
         long currentTimeInMs = Timestamp.valueOf(LocalDateTime.now()).getTime();
         return new Date(currentTimeInMs + days * DAYS_IN_HOURS * HOURS_IN_MIN * MIN_IN_SEC * SEC_IN_MILISEC);

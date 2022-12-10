@@ -21,7 +21,7 @@ public class JwtHelper {
                 .setSubject(authResult.getName())
                 .claim("authorities", authResult.getAuthorities())
                 .setIssuedAt(Date.valueOf(LocalDate.now()))
-                .setExpiration(Date.valueOf(LocalDate.now().plusDays(jwtConfig.getAccessTokenExpirationAfterDays())))
+                .setExpiration(Utils.getCurrentDatePlusMinutes(30))
                 .signWith(secretKey)
                 .compact();
     }
