@@ -15,6 +15,6 @@ import org.springframework.stereotype.Component;
 public class JwtConfig {
     private String secretKey;
     private String tokenPrefix;
-    private Long accessTokenExpirationAfterDays;
-    private Long refreshTokenExpirationAfterDays;
+    private Integer accessTokenExpirationAfterDays;
+    private Integer refreshTokenExpirationAfterDays;
 }

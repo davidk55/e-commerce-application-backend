@@ -1,5 +1,6 @@
 package de.davidkoehlmann.ecommerceapplicationbackend.jwt;
 
+import de.davidkoehlmann.ecommerceapplicationbackend.util.Utils;
 import io.jsonwebtoken.Jwts;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
@@ -29,7 +30,7 @@ public class JwtHelper {
         return Jwts.builder()
                 .setSubject(authResult.getName())
                 .setIssuedAt(Date.valueOf(LocalDate.now()))
-                .setExpiration(Date.valueOf(LocalDate.now().plusDays(jwtConfig.getRefreshTokenExpirationAfterDays())))
+                .setExpiration(Utils.getCurrentDatePlusDays(jwtConfig.getRefreshTokenExpirationAfterDays()))
                 .signWith(secretKey)
                 .compact();
     }

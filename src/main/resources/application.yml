@@ -7,5 +7,5 @@ spring:
 application:
   jwt:
     access-token-expiration-after-days: 60
-    refresh-token-expiration-after-days: 1
+    refresh-token-expiration-after-days: 7
     token-prefix: "Bearer "

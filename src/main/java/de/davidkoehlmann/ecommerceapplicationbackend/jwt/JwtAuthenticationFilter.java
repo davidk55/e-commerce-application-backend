@@ -1,8 +1,10 @@
 package de.davidkoehlmann.ecommerceapplicationbackend.jwt;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import de.davidkoehlmann.ecommerceapplicationbackend.util.Utils;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -42,20 +44,33 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
-        String accessToken = jwtHelper.generateAccessToken(authResult);
+        JSONObject res = new JSONObject();
 
+        // Access Token
+        String accessToken = jwtHelper.generateAccessToken(authResult);
+        res.put("AccessToken", accessToken);
+
+
+        // Role
         Optional<? extends GrantedAuthority> roleOpt = authResult.getAuthorities().stream()
                 .filter(auth -> auth.toString()
                         .startsWith("ROLE_"))
                 .findFirst();
         if (roleOpt.isEmpty()) throw new IllegalArgumentException("No role found");
         String role = roleOpt.get().toString();
-
-        JSONObject res = new JSONObject();
-        res.put("AccessToken", accessToken);
         res.put("Role", role);
+
+        // Misc
         response.setContentType("application/json");
         response.setCharacterEncoding("utf-8");
         response.getWriter().write(res.toString());
+
+        // Refresh Token
+        String refreshToken = jwtHelper.generateRefreshToken(authResult);
+        Cookie refreshTokenCookie = new Cookie("jwt", refreshToken);
+        refreshTokenCookie.setHttpOnly(true);
+        refreshTokenCookie.setSecure(true);
+        refreshTokenCookie.setMaxAge(Utils.daysToSeconds(jwtConfig.getRefreshTokenExpirationAfterDays()));
+        response.addCookie(refreshTokenCookie);
     }
 }
