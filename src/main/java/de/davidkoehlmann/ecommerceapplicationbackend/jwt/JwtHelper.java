@@ -7,8 +7,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.core.Authentication;
 
 import javax.crypto.SecretKey;
-import java.sql.Date;
-import java.time.LocalDate;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 @Configuration
 @RequiredArgsConstructor
@@ -20,7 +20,7 @@ public class JwtHelper {
         return Jwts.builder()
                 .setSubject(authResult.getName())
                 .claim("authorities", authResult.getAuthorities())
-                .setIssuedAt(Date.valueOf(LocalDate.now()))
+                .setIssuedAt(Timestamp.valueOf(LocalDateTime.now()))
                 .setExpiration(Utils.getCurrentDatePlusMinutes(30))
                 .signWith(secretKey)
                 .compact();
@@ -29,7 +29,7 @@ public class JwtHelper {
     public String generateRefreshToken(Authentication authResult) {
         return Jwts.builder()
                 .setSubject(authResult.getName())
-                .setIssuedAt(Date.valueOf(LocalDate.now()))
+                .setIssuedAt(Timestamp.valueOf(LocalDateTime.now()))
                 .setExpiration(Utils.getCurrentDatePlusDays(jwtConfig.getRefreshTokenExpirationAfterDays()))
                 .signWith(secretKey)
                 .compact();
