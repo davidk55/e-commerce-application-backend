@@ -1,5 +1,6 @@
 package de.davidkoehlmann.ecommerceapplicationbackend.jwt;
 
+import de.davidkoehlmann.ecommerceapplicationbackend.account.Account;
 import de.davidkoehlmann.ecommerceapplicationbackend.util.Utils;
 import io.jsonwebtoken.Jwts;
 import lombok.RequiredArgsConstructor;
@@ -31,6 +32,16 @@ public class JwtHelper {
                 .setSubject(authResult.getName())
                 .setIssuedAt(Timestamp.valueOf(LocalDateTime.now()))
                 .setExpiration(Utils.getCurrentDatePlusDays(jwtConfig.getRefreshTokenExpirationAfterDays()))
+                .signWith(secretKey)
+                .compact();
+    }
+
+    public String generateAccessTokenWithAccount(Account account) {
+        return Jwts.builder()
+                .setSubject(account.getUsername())
+                .claim("authorities", account.getAuthorities())
+                .setIssuedAt(Timestamp.valueOf(LocalDateTime.now()))
+                .setExpiration(Utils.getCurrentDatePlusMinutes(30))
                 .signWith(secretKey)
                 .compact();
     }

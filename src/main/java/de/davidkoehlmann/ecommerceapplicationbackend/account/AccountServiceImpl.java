@@ -10,6 +10,8 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -101,6 +103,17 @@ public class AccountServiceImpl implements AccountService{
         } catch (JwtException e) {
             throw new IllegalArgumentException(String.format("The token %s is invalid", refreshToken));
         }
+    }
+
+    @Override
+    public String logout() {
+        Cookie emptyToken = new Cookie("jwt", "");
+        emptyToken.setHttpOnly(true);
+        emptyToken.setPath("/");
+        emptyToken.setMaxAge(1);
+        emptyToken.setSecure(true);
+        httpServletResponse.addCookie(emptyToken);
+        return "Sucessful logout";
     }
 
     @Override

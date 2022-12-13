@@ -27,6 +27,11 @@ public class AccountController {
         return ResponseEntity.ok(accountService.generateAccessToken(refreshToken));
     }
 
+    @GetMapping("/logout")
+    public ResponseEntity<String> logout() {
+        return ResponseEntity.ok(accountService.logout());
+    }
+
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("/accounts")
     public ResponseEntity<List<AccountDTO>> getAccounts() {

@@ -8,4 +8,5 @@ public interface AccountService extends UserDetailsService {
     AccountDTO createAccount(AccountDTO accountDTO);
     List<AccountDTO> getAccounts();
     String generateAccessToken(String refreshToken);
+    String logout();
 }
