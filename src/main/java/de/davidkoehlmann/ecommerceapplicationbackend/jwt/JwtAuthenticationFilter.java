@@ -20,7 +20,7 @@ import java.io.IOException;
 import java.util.Optional;
 
 @RequiredArgsConstructor
-public class AccessTokenAuthenticationFilterJwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
+public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     private final AuthenticationManager authenticationManager;
     private final JwtConfig jwtConfig;
     private final JwtHelper jwtHelper;

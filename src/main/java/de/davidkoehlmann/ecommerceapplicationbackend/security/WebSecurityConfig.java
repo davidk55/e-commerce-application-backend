@@ -1,10 +1,7 @@
 package de.davidkoehlmann.ecommerceapplicationbackend.security;
 
 import de.davidkoehlmann.ecommerceapplicationbackend.account.AccountService;
-import de.davidkoehlmann.ecommerceapplicationbackend.jwt.JwtConfig;
-import de.davidkoehlmann.ecommerceapplicationbackend.jwt.JwtHelper;
-import de.davidkoehlmann.ecommerceapplicationbackend.jwt.JwtTokenVerifierFilter;
-import de.davidkoehlmann.ecommerceapplicationbackend.jwt.JwtAuthenticationFilter;
+import de.davidkoehlmann.ecommerceapplicationbackend.jwt.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -81,6 +78,4 @@ public class WebSecurityConfig {
         source.registerCorsConfiguration("/**", configuration);
         return source;
     }
-
-
 }
