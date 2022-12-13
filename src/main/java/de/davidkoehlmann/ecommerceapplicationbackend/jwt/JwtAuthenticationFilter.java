@@ -20,7 +20,7 @@ import java.io.IOException;
 import java.util.Optional;
 
 @RequiredArgsConstructor
-public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
+public class AccessTokenAuthenticationFilterJwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     private final AuthenticationManager authenticationManager;
     private final JwtConfig jwtConfig;
     private final JwtHelper jwtHelper;
@@ -69,7 +69,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         String refreshToken = jwtHelper.generateRefreshToken(authResult);
         Cookie refreshTokenCookie = new Cookie("jwt", refreshToken);
         refreshTokenCookie.setHttpOnly(true);
-        refreshTokenCookie.setSecure(true);
+//        refreshTokenCookie.setSecure(true);
         refreshTokenCookie.setMaxAge(Utils.daysToSeconds(jwtConfig.getRefreshTokenExpirationAfterDays()));
         response.addCookie(refreshTokenCookie);
     }

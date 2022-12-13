@@ -22,6 +22,11 @@ public class AccountController {
         return ResponseEntity.ok(accountService.createAccount(accountDTO));
     }
 
+    @GetMapping("/refresh")
+    public ResponseEntity<String> generateAccessToken(@CookieValue("jwt") String refreshToken) {
+        return ResponseEntity.ok(accountService.generateAccessToken(refreshToken));
+    }
+
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("/accounts")
     public ResponseEntity<List<AccountDTO>> getAccounts() {

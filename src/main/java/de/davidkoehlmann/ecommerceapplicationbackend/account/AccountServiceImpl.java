@@ -4,10 +4,12 @@ import de.davidkoehlmann.ecommerceapplicationbackend.cart.Cart;
 import de.davidkoehlmann.ecommerceapplicationbackend.cart.CartDTO;
 import de.davidkoehlmann.ecommerceapplicationbackend.cart.CartRepository;
 import de.davidkoehlmann.ecommerceapplicationbackend.cart.CartServiceImpl;
-import de.davidkoehlmann.ecommerceapplicationbackend.cartproduct.CartProductDTO;
-import de.davidkoehlmann.ecommerceapplicationbackend.product.Product;
-import de.davidkoehlmann.ecommerceapplicationbackend.product.ProductDTO;
+import de.davidkoehlmann.ecommerceapplicationbackend.jwt.JwtHelper;
 import de.davidkoehlmann.ecommerceapplicationbackend.security.PasswordConfig;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jws;
+import io.jsonwebtoken.JwtException;
+import io.jsonwebtoken.Jwts;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -15,6 +17,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import javax.crypto.SecretKey;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -26,6 +29,9 @@ public class AccountServiceImpl implements AccountService{
     private final AccountRepository accountRepository;
     private final CartRepository cartRepository;
     private final PasswordConfig encoder;
+    private final SecretKey secretKey;
+    private final JwtHelper jwtHelper;
+    private final HttpServletResponse httpServletResponse;
 
 
     @Override
@@ -75,6 +81,26 @@ public class AccountServiceImpl implements AccountService{
             accountDTOs.add(accountDTO);
         });
         return accountDTOs;
+    }
+
+    @Override
+    public String generateAccessToken(String refreshToken) {
+        try {
+            Jws<Claims> claimsJws = Jwts.parserBuilder()
+                    .setSigningKey(secretKey)
+                    .build()
+                    .parseClaimsJws(refreshToken);
+
+            Claims body = claimsJws.getBody();
+
+            Optional<Account> accountByUsername = accountRepository.findAccountByUsername(body.getSubject());
+
+            if (accountByUsername.isEmpty()) throw new UsernameNotFoundException("User with given name not found");
+
+            return jwtHelper.generateAccessTokenWithAccount(accountByUsername.get());
+        } catch (JwtException e) {
+            throw new IllegalArgumentException(String.format("The token %s is invalid", refreshToken));
+        }
     }
 
     @Override
