@@ -10,7 +10,7 @@ import java.util.Optional;
 
 @Service
 @Qualifier("postgreSQLProductService")
-public class ProductServiceImpl implements ProductService{
+public class ProductServiceImpl implements ProductService {
     private final ProductRepository productRepository;
 
     public ProductServiceImpl(ProductRepository productRepository) {
@@ -21,7 +21,7 @@ public class ProductServiceImpl implements ProductService{
     public ProductDTO getProductById(Long id) {
         Optional<Product> productOptional = productRepository.findById(id);
 
-        if(productOptional.isEmpty()) throw new RuntimeException("Product not found.");
+        if (productOptional.isEmpty()) throw new RuntimeException("Product not found.");
 
         Product productEntity = productOptional.get();
         ProductDTO product = new ProductDTO();

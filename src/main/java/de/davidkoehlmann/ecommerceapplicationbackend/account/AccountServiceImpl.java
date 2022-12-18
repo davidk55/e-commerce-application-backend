@@ -27,7 +27,7 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 @Qualifier(value = "postgreSQLAccountService")
-public class AccountServiceImpl implements AccountService{
+public class AccountServiceImpl implements AccountService {
     private final AccountRepository accountRepository;
     private final CartRepository cartRepository;
     private final PasswordConfig encoder;
@@ -42,7 +42,7 @@ public class AccountServiceImpl implements AccountService{
                 accountRepository.findAccountByUsername(newAccountDTO.getUsername());
 
         // TODO: add validation
-        if(accountEntityOptional.isPresent())
+        if (accountEntityOptional.isPresent())
             throw new IllegalArgumentException("E-mail " + newAccountDTO.getUsername() + " already taken");
 
         Account newAccount = new Account();
@@ -120,7 +120,7 @@ public class AccountServiceImpl implements AccountService{
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Optional<Account> accountOptional = accountRepository.findAccountByUsername(username);
 
-        if(accountOptional.isEmpty()) throw new UsernameNotFoundException("User " + username + " not found");
+        if (accountOptional.isEmpty()) throw new UsernameNotFoundException("User " + username + " not found");
 
         return accountOptional.get();
     }

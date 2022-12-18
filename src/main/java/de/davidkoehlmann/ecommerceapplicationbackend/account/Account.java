@@ -72,6 +72,20 @@ public class Account implements UserDetails {
     }
 
     @Override
+    public int hashCode() {
+        int result = id != null ? id.hashCode() : 0;
+        result = 31 * result + (username != null ? username.hashCode() : 0);
+        result = 31 * result + (password != null ? password.hashCode() : 0);
+        result = 31 * result + (cart != null ? cart.hashCode() : 0);
+        result = 31 * result + (role != null ? role.hashCode() : 0);
+        result = 31 * result + (accountNonExpired ? 1 : 0);
+        result = 31 * result + (accountNonLocked ? 1 : 0);
+        result = 31 * result + (credentialsNonLocked ? 1 : 0);
+        result = 31 * result + (enabled ? 1 : 0);
+        return result;
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
@@ -87,19 +101,5 @@ public class Account implements UserDetails {
         if (!Objects.equals(password, account.password)) return false;
         if (!Objects.equals(cart, account.cart)) return false;
         return role == account.role;
-    }
-
-    @Override
-    public int hashCode() {
-        int result = id != null ? id.hashCode() : 0;
-        result = 31 * result + (username != null ? username.hashCode() : 0);
-        result = 31 * result + (password != null ? password.hashCode() : 0);
-        result = 31 * result + (cart != null ? cart.hashCode() : 0);
-        result = 31 * result + (role != null ? role.hashCode() : 0);
-        result = 31 * result + (accountNonExpired ? 1 : 0);
-        result = 31 * result + (accountNonLocked ? 1 : 0);
-        result = 31 * result + (credentialsNonLocked ? 1 : 0);
-        result = 31 * result + (enabled ? 1 : 0);
-        return result;
     }
 }

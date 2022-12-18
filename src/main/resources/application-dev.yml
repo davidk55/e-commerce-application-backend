@@ -3,6 +3,7 @@ spring:
     url:
     username: david
     password:
+
 application:
   jwt:
     secret-key:

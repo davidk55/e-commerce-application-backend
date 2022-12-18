@@ -23,11 +23,34 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @Service
 @Qualifier(value = "postgreSQLCartService")
-public class CartServiceImpl implements CartService{
+public class CartServiceImpl implements CartService {
     private final AccountRepository accountRepository;
     private final ProductRepository productRepository;
     private final CartProductRepository cartProductRepository;
     private final CartRepository cartRepository;
+
+    public static CartDTO convertCartToCartDTO(Cart curCart) {
+        CartDTO cartDTO = new CartDTO();
+        BeanUtils.copyProperties(curCart, cartDTO);
+
+        // Cart
+        ArrayList<CartProductDTO> cartProductDTOs = new ArrayList<>();
+        curCart.getCartProducts().forEach(curCartProduct -> {
+            // CartProduct
+            CartProductDTO cartProductDTO = new CartProductDTO();
+            cartProductDTO.setAmount(curCartProduct.getAmount());
+
+            // Product
+            ProductDTO productDTO = new ProductDTO();
+            Product product = curCartProduct.getProduct();
+            BeanUtils.copyProperties(product, productDTO);
+            cartProductDTO.setProduct(productDTO);
+            cartProductDTOs.add(cartProductDTO);
+        });
+
+        cartDTO.setProducts(cartProductDTOs);
+        return cartDTO;
+    }
 
     @Override
     public Boolean addProductToCart(Long productId, Integer amount) {
@@ -35,8 +58,8 @@ public class CartServiceImpl implements CartService{
         Optional<Account> accountOpt = accountRepository.findAccountByUsername(authentication.getName());
         Optional<Product> productOpt = productRepository.findById(productId);
 
-        if(accountOpt.isEmpty()) throw new EntityNotFoundException("Account not found");
-        if(productOpt.isEmpty()) throw new EntityNotFoundException("Product not found");
+        if (accountOpt.isEmpty()) throw new EntityNotFoundException("Account not found");
+        if (productOpt.isEmpty()) throw new EntityNotFoundException("Product not found");
 
         Account account = accountOpt.get();
         Cart cart = account.getCart();
@@ -74,29 +97,6 @@ public class CartServiceImpl implements CartService{
         return convertCartToCartDTO(curCart);
     }
 
-    public static CartDTO convertCartToCartDTO(Cart curCart) {
-        CartDTO cartDTO = new CartDTO();
-        BeanUtils.copyProperties(curCart, cartDTO);
-
-        // Cart
-        ArrayList<CartProductDTO> cartProductDTOs = new ArrayList<>();
-        curCart.getCartProducts().forEach(curCartProduct -> {
-            // CartProduct
-            CartProductDTO cartProductDTO = new CartProductDTO();
-            cartProductDTO.setAmount(curCartProduct.getAmount());
-
-            // Product
-            ProductDTO productDTO = new ProductDTO();
-            Product product = curCartProduct.getProduct();
-            BeanUtils.copyProperties(product, productDTO);
-            cartProductDTO.setProduct(productDTO);
-            cartProductDTOs.add(cartProductDTO);
-        });
-
-        cartDTO.setProducts(cartProductDTOs);
-        return cartDTO;
-    }
-
     private CartProduct getCartProductByProductId(Long productId) {
         Cart cart = getCartOfCurrentAccount();
         Optional<CartProduct> foundCartProduct = cart.getCartProducts()
@@ -113,7 +113,7 @@ public class CartServiceImpl implements CartService{
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Optional<Account> accountOpt = accountRepository.findAccountByUsername(authentication.getName());
 
-        if(accountOpt.isEmpty()) throw new EntityNotFoundException("Account not found");
+        if (accountOpt.isEmpty()) throw new EntityNotFoundException("Account not found");
 
         Account account = accountOpt.get();
 

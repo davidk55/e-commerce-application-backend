@@ -1,7 +1,10 @@
 package de.davidkoehlmann.ecommerceapplicationbackend.security;
 
 import de.davidkoehlmann.ecommerceapplicationbackend.account.AccountService;
-import de.davidkoehlmann.ecommerceapplicationbackend.jwt.*;
+import de.davidkoehlmann.ecommerceapplicationbackend.jwt.JwtAuthenticationFilter;
+import de.davidkoehlmann.ecommerceapplicationbackend.jwt.JwtConfig;
+import de.davidkoehlmann.ecommerceapplicationbackend.jwt.JwtHelper;
+import de.davidkoehlmann.ecommerceapplicationbackend.jwt.JwtTokenVerifierFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -70,7 +73,7 @@ public class WebSecurityConfig {
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(List.of("https://e-commerce-app-davidk55.netlify.app"));
-        configuration.setAllowedMethods(Arrays.asList("GET","POST","PATCH", "PUT", "DELETE", "OPTIONS", "HEAD"));
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PATCH", "PUT", "DELETE", "OPTIONS", "HEAD"));
         configuration.setAllowCredentials(true);
         configuration.setAllowedHeaders(List.of("Authorization", "Content-Type"));
         configuration.setMaxAge(3600L);

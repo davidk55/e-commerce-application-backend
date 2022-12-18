@@ -36,7 +36,7 @@ public class JwtTokenVerifierFilter extends OncePerRequestFilter {
         // TODO: verify that jwt sub(name) exist as a user
         String authorizationHeader = request.getHeader("Authorization");
 
-        if(isNullOrEmpty(authorizationHeader) || !authorizationHeader.startsWith(jwtConfig.getTokenPrefix())) {
+        if (isNullOrEmpty(authorizationHeader) || !authorizationHeader.startsWith(jwtConfig.getTokenPrefix())) {
             filterChain.doFilter(request, response);
             return;
         }
