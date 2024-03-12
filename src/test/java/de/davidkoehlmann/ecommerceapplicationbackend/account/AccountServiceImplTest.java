@@ -88,4 +88,57 @@ class AccountServiceImplTest {
         Assertions.assertEquals(compareToString, illegalArgumentException.getMessage());
     }
 
+
+    @Test
+    void getAccountsTest() {
+        // given
+        String username = "joe.shmoe@gmail.com";
+        String password = "123";
+        BCryptPasswordEncoder myEncoder = new BCryptPasswordEncoder(10);
+        String encodedPassword = myEncoder.encode(password);
+        Cart cart = new Cart();
+        cart.setCartProducts(new ArrayList<>());
+
+        Account account = new Account();
+        account.setRole(AccountRole.USER);
+        account.setEnabled(true);
+        account.setAccountNonExpired(true);
+        account.setAccountNonLocked(true);
+        account.setCredentialsNonLocked(true);
+        account.setUsername(username);
+        account.setPassword(encodedPassword);
+        account.setCart(cart);
+        List<Account> accounts = new ArrayList<>();
+        accounts.add(account);
+
+        CartDTO compareCartDTO = new CartDTO();
+        compareCartDTO.setProducts(new ArrayList<>());
+        List<AccountDTO> compareToAccounts = new ArrayList<>();
+        AccountDTO compareAccountDTO = new AccountDTO(username, encodedPassword, compareCartDTO);
+        compareToAccounts.add(compareAccountDTO);
+
+        given(accountRepository.findAll()).willReturn(accounts);
+
+        // when
+        List<AccountDTO> result = underTest.getAccounts();
+
+        // then
+        assertThat(result).usingRecursiveComparison().isEqualTo(compareToAccounts);
+    }
+
+    @Test
+    void loadUserByUsernameTest() {
+        // given
+        String username = "john";
+        Account account = new Account();
+        account.setUsername(username);
+
+        given(accountRepository.findAccountByUsername(username)).willReturn(Optional.of(account));
+
+        // when
+        UserDetails result = underTest.loadUserByUsername(username);
+
+        // then
+        assertThat(account).usingRecursiveComparison().isEqualTo(result);
+    }
 }
