@@ -1,9 +1,13 @@
+server:
+  port: 8080
 spring:
+  config:
+    import: optional:classpath:.env[.properties]
   datasource:
-    url:
-    username: david
-    password:
+    url: jdbc:postgresql://${DEV_DB_HOST}:${DEV_DB_PORT}/${DEV_DB_NAME}
+    username: ${DEV_DB_USERNAME}
+    password: ${DEV_DB_PASSWORD}
 
 application:
   jwt:
-    secret-key:
+    secret-key: ${DEV_JWT_SECRET_KEY}

@@ -1,0 +1,12 @@
+version: '3.9'
+
+services:
+
+  db:
+    image: postgres:13-alpine
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_DB: e-commerce-application-backend-postgres
+      POSTGRES_USER: david
+      POSTGRES_PASSWORD: GwrFRtB2uKFFlkYErz9zqXIGsdbfR6
