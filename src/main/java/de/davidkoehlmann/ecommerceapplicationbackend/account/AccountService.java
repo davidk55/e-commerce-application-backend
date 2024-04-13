@@ -1,15 +1,14 @@
 package de.davidkoehlmann.ecommerceapplicationbackend.account;
 
+import java.util.List;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
-import java.util.List;
-
 public interface AccountService extends UserDetailsService {
-    AccountDTO createAccount(AccountDTO accountDTO);
+  AccountDTO createAccount(AccountDTO accountDTO);
 
-    List<AccountDTO> getAccounts();
+  List<AccountDTO> getAccounts();
 
-    String generateAccessToken(String refreshToken);
+  String generateAccessToken(String refreshToken);
 
-    String logout();
+  String logout();
 }

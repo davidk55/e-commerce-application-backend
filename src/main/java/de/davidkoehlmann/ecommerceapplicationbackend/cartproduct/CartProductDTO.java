@@ -5,6 +5,6 @@ import lombok.Data;
 
 @Data
 public class CartProductDTO {
-    private ProductDTO product;
-    private Integer amount;
+  private ProductDTO product;
+  private Integer amount;
 }

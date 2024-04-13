@@ -10,29 +10,31 @@ import org.springframework.web.bind.annotation.*;
 @PreAuthorize("isAuthenticated()")
 @RequestMapping("/api/v1")
 public class CartController {
-    private final CartService cartService;
+  private final CartService cartService;
 
-    public CartController(@Qualifier("postgreSQLCartService") CartService cartService) {
-        this.cartService = cartService;
-    }
+  public CartController(@Qualifier("postgreSQLCartService") CartService cartService) {
+    this.cartService = cartService;
+  }
 
-    @GetMapping("/cart")
-    public ResponseEntity<CartDTO> getCart() {
-        return ResponseEntity.ok(cartService.getCart());
-    }
+  @GetMapping("/cart")
+  public ResponseEntity<CartDTO> getCart() {
+    return ResponseEntity.ok(cartService.getCart());
+  }
 
-    @PostMapping("/cart/add/{productId}/{amount}")
-    public ResponseEntity<Boolean> addProductToCart(@PathVariable Long productId, @PathVariable Integer amount) {
-        return ResponseEntity.ok(cartService.addProductToCart(productId, amount));
-    }
+  @PostMapping("/cart/add/{productId}/{amount}")
+  public ResponseEntity<Boolean> addProductToCart(
+      @PathVariable Long productId, @PathVariable Integer amount) {
+    return ResponseEntity.ok(cartService.addProductToCart(productId, amount));
+  }
 
-    @DeleteMapping("/cart/remove/{productId}")
-    public ResponseEntity<Boolean> removeProductFromCart(@PathVariable Long productId) {
-        return ResponseEntity.ok(cartService.deleteProductInCart(productId));
-    }
+  @DeleteMapping("/cart/remove/{productId}")
+  public ResponseEntity<Boolean> removeProductFromCart(@PathVariable Long productId) {
+    return ResponseEntity.ok(cartService.deleteProductInCart(productId));
+  }
 
-    @PutMapping("/cart/update/{productId}/{amount}")
-    public ResponseEntity<Boolean> updateProductInCart(@PathVariable Long productId, @PathVariable Integer amount) {
-        return ResponseEntity.ok(cartService.changeProductAmountInCart(productId, amount));
-    }
+  @PutMapping("/cart/update/{productId}/{amount}")
+  public ResponseEntity<Boolean> updateProductInCart(
+      @PathVariable Long productId, @PathVariable Integer amount) {
+    return ResponseEntity.ok(cartService.changeProductAmountInCart(productId, amount));
+  }
 }

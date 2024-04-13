@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class AccountDTO {
-    private String username;
-    private String password;
-    private CartDTO cart;
+  private String username;
+  private String password;
+  private CartDTO cart;
 }

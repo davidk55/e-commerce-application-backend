@@ -15,16 +15,15 @@ import lombok.Setter;
 @Getter
 @NoArgsConstructor
 public class CartProduct {
-    @EmbeddedId
-    private CartProductId id = new CartProductId();
+  @EmbeddedId private CartProductId id = new CartProductId();
 
-    @ManyToOne
-    @MapsId("cartId")
-    private Cart cart;
+  @ManyToOne
+  @MapsId("cartId")
+  private Cart cart;
 
-    @ManyToOne
-    @MapsId("productId")
-    private Product product;
+  @ManyToOne
+  @MapsId("productId")
+  private Product product;
 
-    private Integer amount;
+  private Integer amount;
 }

@@ -5,6 +5,9 @@ import de.davidkoehlmann.ecommerceapplicationbackend.jwt.JwtAuthenticationFilter
 import de.davidkoehlmann.ecommerceapplicationbackend.jwt.JwtConfig;
 import de.davidkoehlmann.ecommerceapplicationbackend.jwt.JwtHelper;
 import de.davidkoehlmann.ecommerceapplicationbackend.jwt.JwtTokenVerifierFilter;
+import java.util.Arrays;
+import java.util.List;
+import javax.crypto.SecretKey;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -21,64 +24,62 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-import javax.crypto.SecretKey;
-import java.util.Arrays;
-import java.util.List;
-
-
 @EnableWebSecurity
 @Configuration
 @RequiredArgsConstructor
 @EnableMethodSecurity
 public class WebSecurityConfig {
 
-    private final AccountService accountService;
-    private final PasswordEncoder passwordEncoder;
-    private final SecretKey secretKey;
-    private final JwtConfig jwtConfig;
-    private final JwtHelper jwtHelper;
+  private final AccountService accountService;
+  private final PasswordEncoder passwordEncoder;
+  private final SecretKey secretKey;
+  private final JwtConfig jwtConfig;
+  private final JwtHelper jwtHelper;
 
-    @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.csrf().disable();
+  @Bean
+  public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    http.csrf().disable();
 
-        http
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and()
-                .addFilter(new JwtAuthenticationFilter(authenticationManager(), jwtConfig, jwtHelper))
-                .addFilterAfter(new JwtTokenVerifierFilter(secretKey, jwtConfig), JwtAuthenticationFilter.class);
+    http.sessionManagement()
+        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+        .and()
+        .addFilter(new JwtAuthenticationFilter(authenticationManager(), jwtConfig, jwtHelper))
+        .addFilterAfter(
+            new JwtTokenVerifierFilter(secretKey, jwtConfig), JwtAuthenticationFilter.class);
 
-        http.formLogin().disable();
+    http.formLogin().disable();
 
-        http.cors();
+    http.cors();
 
-        return http.build();
-    }
+    return http.build();
+  }
 
-    @Bean
-    public AuthenticationManager authenticationManager() {
-        return new ProviderManager(List.of(daoAuthenticationProvider()));
-    }
+  @Bean
+  public AuthenticationManager authenticationManager() {
+    return new ProviderManager(List.of(daoAuthenticationProvider()));
+  }
 
-    @Bean
-    public DaoAuthenticationProvider daoAuthenticationProvider() {
-        DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
-        daoAuthenticationProvider.setUserDetailsService(accountService);
-        daoAuthenticationProvider.setPasswordEncoder(passwordEncoder);
+  @Bean
+  public DaoAuthenticationProvider daoAuthenticationProvider() {
+    DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
+    daoAuthenticationProvider.setUserDetailsService(accountService);
+    daoAuthenticationProvider.setPasswordEncoder(passwordEncoder);
 
-        return daoAuthenticationProvider;
-    }
+    return daoAuthenticationProvider;
+  }
 
-    @Bean
-    CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("https://e-commerce-app-davidk55.netlify.app", "http://localhost:3000"));
-        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PATCH", "PUT", "DELETE", "OPTIONS", "HEAD"));
-        configuration.setAllowCredentials(true);
-        configuration.setAllowedHeaders(List.of("Authorization", "Content-Type"));
-        configuration.setMaxAge(3600L);
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration);
-        return source;
-    }
+  @Bean
+  CorsConfigurationSource corsConfigurationSource() {
+    CorsConfiguration configuration = new CorsConfiguration();
+    configuration.setAllowedOrigins(
+        List.of("https://e-commerce-app-davidk55.netlify.app", "http://localhost:3000"));
+    configuration.setAllowedMethods(
+        Arrays.asList("GET", "POST", "PATCH", "PUT", "DELETE", "OPTIONS", "HEAD"));
+    configuration.setAllowCredentials(true);
+    configuration.setAllowedHeaders(List.of("Authorization", "Content-Type"));
+    configuration.setMaxAge(3600L);
+    UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+    source.registerCorsConfiguration("/**", configuration);
+    return source;
+  }
 }
