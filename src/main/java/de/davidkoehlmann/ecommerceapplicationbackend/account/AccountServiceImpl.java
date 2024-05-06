@@ -39,10 +39,12 @@ public class AccountServiceImpl implements AccountService {
     Optional<Account> accountEntityOptional =
         accountRepository.findAccountByUsername(newAccountDTO.getUsername());
 
-    // TODO: add validation
     if (accountEntityOptional.isPresent())
       throw new IllegalArgumentException(
           "E-mail " + newAccountDTO.getUsername() + " already taken");
+    if (newAccountDTO.getUsername() == "")
+      throw new IllegalArgumentException("Enter a non empty username");
+    // TODO: add better validation
 
     Account newAccount = new Account();
     String encryptedPassword = encoder.passwordEncoder().encode(newAccountDTO.getPassword());

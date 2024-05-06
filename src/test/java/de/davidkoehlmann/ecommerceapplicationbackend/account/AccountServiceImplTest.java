@@ -78,7 +78,7 @@ class AccountServiceImplTest {
     String username = "";
     String password = "123";
     AccountDTO given = new AccountDTO(username, password, null);
-    String compareToString = "Enter a valid username";
+    String compareToString = "Enter a non empty username";
 
     // when
     IllegalArgumentException illegalArgumentException =
@@ -142,4 +142,3 @@ class AccountServiceImplTest {
     assertThat(account).usingRecursiveComparison().isEqualTo(result);
   }
 }
-
