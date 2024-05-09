@@ -20,4 +20,3 @@ public class Cart {
     cartProducts.add(cartProduct);
   }
 }
-
